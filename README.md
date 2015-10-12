@@ -1,12 +1,11 @@
-# 2015 Fall Computer Security Project #2
-Implement sandbox with ptrace and seccomp.
-**Do NOT use this code on your homework!**
+# 2015 Fall Computer Security Projects
+Project codes which made in this course.
 
-## Language
-Used standard C11.
+## 1. Klee
+Do symbolic execution with some codes. Because I used sample code of [miniz](https://github.com/richgel999/miniz), there aren't  my own codes.
 
-## Environment
-Built in Ubuntu Server 15.04 64 bit with GCC 4.9.1. Tested in the same environment.
+## 2. Sandboxing
+Implement sandbox with ptrace or seccomp.
 
-## Etc
-Detailed description will be added later...
+## 3. TBA
+I don't know yet. Only hope no another project :)
