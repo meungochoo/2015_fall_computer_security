@@ -18,8 +18,7 @@ set(SOURCE_DIR source)
 set(SOURCE_LIST)
 list(APPEND SOURCE_LIST ${SOURCE_DIR}/${TRACER_NAME}.cpp)
 
-set(BUILD_DIR build)
-add_executable(${TRACER_NAME}.out ${SOURCE_LIST})
-add_executable(testee.out test/testee.cpp)
+add_executable(${TRACER_NAME} ${SOURCE_LIST})
+add_executable(testee test/testee.cpp)
 
-target_link_libraries(${TRACER_NAME}.out ${Boost_LIBRARIES})
+target_link_libraries(${TRACER_NAME} ${Boost_LIBRARIES})
