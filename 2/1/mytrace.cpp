@@ -39,8 +39,8 @@ po::variables_map parse_program_options(int argn, char* argv[])
 	p_desc.add("commands", -1);
 
 	po::variables_map vm;
-	std::stringstream help_msg("Usage : mytrace [-options] commands\n");
-	help_msg << desc << std::endl;
+	std::stringstream help_msg;
+	help_msg << "Usage : mytrace [-options] commands\n" << desc << std::endl;
 
 	try
 	{
