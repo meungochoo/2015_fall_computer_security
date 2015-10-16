@@ -5,12 +5,8 @@
 #include <boost/program_options.hpp>
 
 #include <sys/ptrace.h>
-#include <sys/reg.h>
-#include <sys/syscall.h>
-#include <sys/types.h>
-#include <sys/user.h>
-#include <sys/wait.h>
-#include <unistd.h>
+
+#include "Tracer.h"
 
 namespace po = boost::program_options;
 
@@ -26,64 +22,6 @@ bool run_child(const std::string& path, char* argv[])
 
 	// Failed to execute
 	return false;
-}
-
-bool continue_trace_syscall(int child_pid)
-{
-	if(ptrace(PTRACE_SYSCALL, child_pid, nullptr, nullptr) == -1)
-	{
-		std::cerr << "Error : Failed to continue tracing." << std::endl;
-		return false;
-	}
-
-	return true;
-}
-
-int do_trace(int child_pid, po::variables_map& vm)
-{
-	int status;
-	bool is_in_syscall = false, is_child_executed = false;
-	user_regs_struct regs;
-
-	// Trace syscalls until child process ends
-	while(true)
-	{
-		waitpid(child_pid, &status, 0);
-
-		if(WIFEXITED(status) || WIFSIGNALED(status))
-		{
-			break;
-		}
-
-		is_in_syscall = !is_in_syscall;
-
-		if(ptrace(PTRACE_GETREGS, child_pid, nullptr, &regs) == -1)
-		{
-			std::cerr << "Error : Failed to get register info." << std::endl;
-			break;
-		}
-
-		// TODO : Ignore syscalls until function main is called
-		
-		// TODO : Implement additional features...
-		if(!is_in_syscall)
-		{
-			// Entered to syscall: modify syscall number if needed
-		}
-		else
-		{
-			// Returned from syscall: get return value
-			std::cerr << "syscall[" << regs.orig_rax << "](unimplemented) = ";
-			fprintf(stderr, (static_cast<long long>(regs.rax) > 1024 ? "0x%llx\n" : "%lld\n"), static_cast<long long>(regs.rax));
-		}
-
-		if(!continue_trace_syscall(child_pid))
-		{
-			break;
-		}
-	}
-
-	return 0;
 }
 
 po::variables_map parse_program_options(int argn, char* argv[])
@@ -158,7 +96,8 @@ int main(int argn, char* argv[])
 	}
 	else
 	{
-		do_trace(child_pid, vm);
+		Tracer tracer;
+		tracer.do_trace(child_pid, vm);
 	}
 
 	return 0;
